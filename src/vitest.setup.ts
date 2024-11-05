@@ -19,7 +19,6 @@ global.ResizeObserver = class ResizeObserver {
 
 Element.prototype.scrollIntoView = vi.fn();
 
-// Mock Notification globally if needed
 vi.mock("@/path/to/Notification", () => ({
   __esModule: true,
   ...require("@/__mocks__/NotificationMock"),

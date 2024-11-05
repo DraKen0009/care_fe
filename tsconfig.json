@@ -18,8 +18,8 @@
     "types": [
       "vite/client",
       "vite-plugin-pwa/client",
-      "vitest/globals",             // Added for Vitest global types
-      "@testing-library/jest-dom"   // Added for Jest DOM matchers
+      "vitest/globals",
+      "@testing-library/jest-dom"
     ],
     "baseUrl": ".",
     "paths": {

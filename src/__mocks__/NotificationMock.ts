@@ -1,5 +1,3 @@
-// src/__mocks__/NotificationMock.ts
-
 // Mock functions for each notification type
 const Success = vi.fn(({ msg }) =>
   console.log(`Mock Success Notification: ${msg}`),
