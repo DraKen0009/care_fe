@@ -6,7 +6,7 @@ import checker from "vite-plugin-checker";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 import { treeShakeCareIcons } from "./plugins/treeShakeCareIcons";
 import fs from "fs";
-import { defineConfig } from "vite";
+import { defineConfig } from "vitest/config";
 
 const pdfWorkerPath = path.join(
   path.dirname(
@@ -172,5 +172,10 @@ export default defineConfig({
       object-src 'self' ${cdnUrls};`,
     },
     port: 4000,
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./src/vitest.setup.ts",
   },
 });
