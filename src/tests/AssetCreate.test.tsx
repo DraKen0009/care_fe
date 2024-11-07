@@ -5,7 +5,7 @@ import {
   waitFor,
   waitForElementToBeRemoved,
 } from "@testing-library/react";
-import AssetCreate from "@/Components/Facility/AssetCreate";
+import AssetCreate from "@/components/Facility/AssetCreate";
 import { describe, it, expect } from "vitest";
 import { mockAssetData } from "@/mocks/assetCreateMockData";
 
