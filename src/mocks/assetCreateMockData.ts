@@ -1,4 +1,4 @@
-import { AssetLocationType } from "@/Components/Assets/AssetTypes";
+import { AssetLocationType } from "@/components/Assets/AssetTypes";
 
 export const facilityData = {
   results: [
