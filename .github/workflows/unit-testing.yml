@@ -27,4 +27,4 @@ jobs:
         run: npm ci
 
       - name: Run Vitest
-        run: npm run vitest -- --config vite.mts
+        run: npm run vitest -- --config vite.config.mts
