@@ -26,5 +26,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: List Files for Debugging
+        run: ls -R src/Components/Assets
+
       - name: Run Vitest
         run: npm run vitest -- --config vite.config.mts
