@@ -2,6 +2,7 @@ name: Unit TEsting
 
 on:
   pull_request:
+    types: [opened, reopened, edited]
     branches: [develop]
 
 jobs:
