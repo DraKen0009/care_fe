@@ -243,5 +243,10 @@ export default defineConfig(({ mode }) => {
       },
       port: 4000,
     },
+    test: {
+      globals: true,
+      environment: "jsdom",
+      setupFiles: "./src/vitest.setup.ts",
+    },
   };
 });

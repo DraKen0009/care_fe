@@ -48,7 +48,8 @@
     "lint": "eslint ./src",
     "lint-fix": "eslint ./src --fix",
     "format": "prettier ./src ./cypress --write",
-    "sort-locales": "node ./scripts/sort-locales.js"
+    "sort-locales": "node ./scripts/sort-locales.js",
+    "vitest": "vitest"
   },
   "dependencies": {
     "@fontsource/figtree": "^5.1.1",
@@ -102,6 +103,9 @@
     "@tailwindcss/container-queries": "^0.1.1",
     "@tailwindcss/forms": "^0.5.9",
     "@tailwindcss/typography": "^0.5.15",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/dompurify": "^3.0.5",
     "@types/events": "^3.0.3",
@@ -135,6 +139,7 @@
     "lint-staged": "^15.2.10",
     "local-cypress": "^1.2.6",
     "marked": "^14.1.4",
+    "msw": "^2.6.4",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.8",
@@ -145,7 +150,8 @@
     "vite": "^5.4.10",
     "vite-plugin-checker": "^0.8.0",
     "vite-plugin-pwa": "^0.20.5",
-    "vite-plugin-static-copy": "^2.0.0"
+    "vite-plugin-static-copy": "^2.0.0",
+    "vitest": "^2.1.5"
   },
   "browserslist": {
     "production": [
