@@ -15,12 +15,4 @@ export const assetHandlers = [
   http.get("https://careapi.ohc.network/api/v1/asset/:mock-asset-id/", () => {
     return HttpResponse.json(mockAssetData);
   }),
-
-  http.get("/locale/:lng.json", (request) => {
-    const { lng } = request.params; // Capture the language from the URL
-    return HttpResponse.json({
-      key: `Translation for ${lng}`,
-      description: `Description in ${lng}`,
-    });
-  }),
 ];

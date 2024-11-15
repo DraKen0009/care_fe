@@ -1,17 +1,17 @@
 import * as matchers from "@testing-library/jest-dom/matchers";
 import { cleanup } from "@testing-library/react";
-import { initReactI18next } from "react-i18next";
 import { afterEach, expect } from "vitest";
-
-import i18n from "@/i18n";
 
 import { server } from "./mocks/server";
 
-i18n.use(initReactI18next).init({
-  lng: "en",
-  fallbackLng: "en",
-  resources: {},
-});
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string) => key,
+    i18n: {
+      changeLanguage: vi.fn(),
+    },
+  }),
+}));
 
 global.ResizeObserver = class ResizeObserver {
   observe() {}
