@@ -101,8 +101,11 @@ export default function ConfigureCamera(props: Props) {
   const selectedUnlinkedBed = unlinkedBeds?.find((bed) => bed.id === query.bed);
 
   const cameraPresetsQuery = useQuery(FeedRoutes.listAssetBedPresets, {
-    pathParams: { assetbed_id: selectedAssetBed?.id ?? "" },
-    query: { position: true, limit: 50 },
+    query: {
+      assetbed_external_id: selectedAssetBed?.id ?? "",
+      position: true,
+      limit: 50,
+    },
     prefetch: !!selectedAssetBed?.id,
   });
 
@@ -416,7 +419,7 @@ export default function ConfigureCamera(props: Props) {
                     <Submit
                       onClick={async () => {
                         const { res } = await request(FeedRoutes.createPreset, {
-                          pathParams: { assetbed_id: selectedAssetBed.id },
+                          query: { assetbed_external_id: selectedAssetBed.id },
                           body: {
                             name: presetName,
                             position: createPreset!,
@@ -522,8 +525,10 @@ export default function ConfigureCamera(props: Props) {
                                   FeedRoutes.deletePreset,
                                   {
                                     pathParams: {
-                                      assetbed_id: selectedAssetBed.id,
                                       id: preset.id,
+                                    },
+                                    query: {
+                                      assetbed_external_id: selectedAssetBed.id,
                                     },
                                   },
                                 );
@@ -552,8 +557,10 @@ export default function ConfigureCamera(props: Props) {
                                   FeedRoutes.updatePreset,
                                   {
                                     pathParams: {
-                                      assetbed_id: selectedAssetBed.id,
                                       id: preset.id,
+                                    },
+                                    query: {
+                                      assetbed_external_id: selectedAssetBed.id,
                                     },
                                     body: {
                                       name: presetName || undefined,

@@ -16,9 +16,8 @@ interface Props {
 export default function LocationFeedTile(props: Props) {
   const [preset, setPreset] = useState<CameraPreset>();
   const { operate, key } = useOperateCamera(props.asset.id);
-  const { data, loading } = useQuery(FeedRoutes.listAssetPresets, {
-    pathParams: { asset_id: props.asset.id },
-    query: { limit: 100 },
+  const { data, loading } = useQuery(FeedRoutes.listCameraPresets, {
+    query: { asset_external_id: props.asset.id, limit: 100 },
   });
 
   return (

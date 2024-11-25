@@ -58,9 +58,8 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
 
   const { key, operate } = useOperateCamera(asset?.id ?? "");
 
-  const presetsQuery = useQuery(FeedRoutes.listBedPresets, {
-    pathParams: { bed_id: bed?.id ?? "" },
-    query: { limit: 100 },
+  const presetsQuery = useQuery(FeedRoutes.listCameraPresets, {
+    query: { bed_external_id: bed?.id ?? "", limit: 100 },
     prefetch: !!bed,
     onResponse: ({ data }) => {
       if (!data) {
@@ -115,8 +114,10 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
     const { position } = (data as { result: { position: PTZPayload } }).result;
     const { data: updated } = await request(FeedRoutes.updatePreset, {
       pathParams: {
-        assetbed_id: preset.asset_bed.id,
         id: preset.id,
+      },
+      query: {
+        assetbed_external_id: preset.asset_bed.id,
       },
       body: {
         position,
