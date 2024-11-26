@@ -100,10 +100,9 @@ export default function ConfigureCamera(props: Props) {
   );
   const selectedUnlinkedBed = unlinkedBeds?.find((bed) => bed.id === query.bed);
 
-  const cameraPresetsQuery = useQuery(FeedRoutes.listAssetBedPresets, {
+  const cameraPresetsQuery = useQuery(FeedRoutes.positionPresets.list, {
     query: {
       assetbed_external_id: selectedAssetBed?.id ?? "",
-      position: true,
       limit: 50,
     },
     prefetch: !!selectedAssetBed?.id,
@@ -418,13 +417,18 @@ export default function ConfigureCamera(props: Props) {
                     />
                     <Submit
                       onClick={async () => {
-                        const { res } = await request(FeedRoutes.createPreset, {
-                          query: { assetbed_external_id: selectedAssetBed.id },
-                          body: {
-                            name: presetName,
-                            position: createPreset!,
+                        const { res } = await request(
+                          FeedRoutes.positionPresets.create,
+                          {
+                            query: {
+                              assetbed_external_id: selectedAssetBed.id,
+                            },
+                            body: {
+                              name: presetName,
+                              position: createPreset!,
+                            },
                           },
-                        });
+                        );
                         if (!res?.ok) {
                           return;
                         }
@@ -522,14 +526,9 @@ export default function ConfigureCamera(props: Props) {
                               border
                               onClick={async () => {
                                 const { res } = await request(
-                                  FeedRoutes.deletePreset,
+                                  FeedRoutes.positionPresets.delete,
                                   {
-                                    pathParams: {
-                                      id: preset.id,
-                                    },
-                                    query: {
-                                      assetbed_external_id: selectedAssetBed.id,
-                                    },
+                                    pathParams: { id: preset.id },
                                   },
                                 );
                                 if (!res?.ok) {
@@ -554,14 +553,9 @@ export default function ConfigureCamera(props: Props) {
                               label={t("save")}
                               onClick={async () => {
                                 const { res } = await request(
-                                  FeedRoutes.updatePreset,
+                                  FeedRoutes.positionPresets.update,
                                   {
-                                    pathParams: {
-                                      id: preset.id,
-                                    },
-                                    query: {
-                                      assetbed_external_id: selectedAssetBed.id,
-                                    },
+                                    pathParams: { id: preset.id },
                                     body: {
                                       name: presetName || undefined,
                                       position: editPreset?.position,

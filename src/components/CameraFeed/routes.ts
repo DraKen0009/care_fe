@@ -53,31 +53,28 @@ export const FeedRoutes = {
     TBody: Type<{ action: OperationAction }>(),
   },
 
-  listAssetBedPresets: {
-    path: "/api/camera/assetbed/position_presets/",
-    method: "GET",
-    TRes: Type<PaginatedResponse<CameraPreset>>(),
-  },
-  listCameraPresets: {
-    path: "/api/camera/position_presets/",
-    method: "GET",
-    TRes: Type<PaginatedResponse<CameraPreset>>(),
-  },
-  createPreset: {
-    path: "/api/camera/assetbed/position_presets/",
-    method: "POST",
-    TRes: Type<CameraPreset>(),
-    TBody: Type<WritableOnly<CameraPreset>>(),
-  },
-  updatePreset: {
-    path: "/api/camera/assetbed/position_presets/{id}/",
-    method: "PATCH",
-    TRes: Type<CameraPreset>(),
-    TBody: Type<Partial<WritableOnly<CameraPreset>>>(),
-  },
-  deletePreset: {
-    path: "/api/camera/assetbed/position_presets/{id}/",
-    method: "DELETE",
-    TRes: Type<CameraPreset>(),
+  positionPresets: {
+    list: {
+      path: "/api/camera/position-presets/",
+      method: "GET",
+      TRes: Type<PaginatedResponse<CameraPreset>>(),
+    },
+    create: {
+      path: "/api/camera/position-presets/",
+      method: "POST",
+      TRes: Type<CameraPreset>(),
+      TBody: Type<WritableOnly<CameraPreset>>(),
+    },
+    update: {
+      path: "/api/camera/position-presets/{id}/",
+      method: "PATCH",
+      TRes: Type<CameraPreset>(),
+      TBody: Type<Partial<WritableOnly<CameraPreset>>>(),
+    },
+    delete: {
+      path: "/api/camera/position-presets/{id}/",
+      method: "DELETE",
+      TRes: Type<CameraPreset>(),
+    },
   },
 } as const;
