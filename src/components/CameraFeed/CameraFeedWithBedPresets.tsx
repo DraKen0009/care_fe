@@ -6,7 +6,7 @@ import { CameraPresetDropdown } from "@/components/CameraFeed/CameraPresetSelect
 import { CameraPreset, FeedRoutes } from "@/components/CameraFeed/routes";
 import useOperateCamera from "@/components/CameraFeed/useOperateCamera";
 
-import useQuery from "@/Utils/request/useQuery";
+import useTanStackQueryInstead from "@/Utils/request/useQuery";
 import { classNames } from "@/Utils/utils";
 
 interface Props {
@@ -16,9 +16,12 @@ interface Props {
 export default function LocationFeedTile(props: Props) {
   const [preset, setPreset] = useState<CameraPreset>();
   const { operate, key } = useOperateCamera(props.asset.id);
-  const { data, loading } = useQuery(FeedRoutes.positionPresets.list, {
-    query: { asset_external_id: props.asset.id, limit: 100 },
-  });
+  const { data, loading } = useTanStackQueryInstead(
+    FeedRoutes.positionPresets.list,
+    {
+      query: { asset_external_id: props.asset.id, limit: 100 },
+    },
+  );
 
   return (
     <CameraFeed

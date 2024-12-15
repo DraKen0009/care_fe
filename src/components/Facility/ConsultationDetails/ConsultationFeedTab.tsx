@@ -25,7 +25,7 @@ import useBreakpoints from "@/hooks/useBreakpoints";
 import { triggerGoal } from "@/Integrations/Plausible";
 import { Warn } from "@/Utils/Notifications";
 import request from "@/Utils/request/request";
-import useQuery from "@/Utils/request/useQuery";
+import useTanStackQueryInstead from "@/Utils/request/useQuery";
 import { classNames, isIOS } from "@/Utils/utils";
 
 export const ConsultationFeedTab = (props: ConsultationTabProps) => {
@@ -34,6 +34,7 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
   const bed = props.consultationData.current_bed?.bed_object;
   const feedStateSessionKey = `encounterFeedState[${props.consultationId}]`;
   const [preset, setPreset] = useState<CameraPreset>();
+  const [selectedPreset, setSelectedPreset] = useState<CameraPreset>();
   const [showPresetSaveConfirmation, setShowPresetSaveConfirmation] =
     useState(false);
   const [isUpdatingPreset, setIsUpdatingPreset] = useState(false);
@@ -58,50 +59,39 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
 
   const { key, operate } = useOperateCamera(asset?.id ?? "");
 
-  const presetsQuery = useQuery(FeedRoutes.positionPresets.list, {
-    query: { bed_external_id: bed?.id ?? "", limit: 100 },
-    prefetch: !!bed,
-    onResponse: ({ data }) => {
-      if (!data) {
-        return;
-      }
+  const presetsQuery = useTanStackQueryInstead(
+    FeedRoutes.positionPresets.list,
+    {
+      query: { bed_external_id: bed?.id ?? "", limit: 100 },
+      prefetch: !!bed,
+      onResponse: ({ data }) => {
+        if (!data) {
+          return;
+        }
 
-      const presets = data.results;
-      const lastStateJSON = sessionStorage.getItem(feedStateSessionKey);
+        const presets = data.results;
+        const lastStateJSON = sessionStorage.getItem(feedStateSessionKey);
 
-      const preset =
-        (() => {
-          if (lastStateJSON) {
-            const lastState = JSON.parse(lastStateJSON) as LastFeedState;
-            if (lastState.type === "preset") {
-              return presets.find((obj) => obj.id === lastState.value);
-            }
-            if (lastState.type === "position") {
-              const assetBedObj = presets.find(
-                (p) => p.asset_bed.id === lastState.assetBed,
-              )?.asset_bed;
-
-              if (!assetBedObj) {
+        const preset =
+          (() => {
+            if (lastStateJSON) {
+              const lastState = JSON.parse(lastStateJSON) as LastFeedState;
+              if (lastState.type === "preset") {
+                return presets.find((obj) => obj.id === lastState.value);
+              }
+              if (lastState.type === "position") {
                 return;
               }
-
-              return {
-                ...presets[0],
-                id: "",
-                asset_bed: assetBedObj,
-                position: lastState.value,
-              } satisfies CameraPreset;
             }
-          }
-        })() ?? presets[0];
+          })() ?? presets[0];
 
-      console.log({ preset, presets });
-
-      if (preset) {
-        setPreset(preset);
-      }
+        if (preset) {
+          setPreset(preset);
+          setSelectedPreset(preset);
+        }
+      },
     },
-  });
+  );
 
   const presets = presetsQuery.data?.results;
 
@@ -122,6 +112,7 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
     await presetsQuery.refetch();
 
     setPreset(updated);
+    setSelectedPreset(updated);
     setHasMoved(false);
     setIsUpdatingPreset(false);
     setShowPresetSaveConfirmation(false);
@@ -150,7 +141,7 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
   }
 
   if (!bed || !asset) {
-    return <span>No bed/asset linked allocated</span>;
+    return <span>{t("no_bed_asset_linked_allocated")}</span>;
   }
 
   const cannotSaveToPreset = !hasMoved || !preset?.id;
@@ -158,8 +149,8 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
   return (
     <StillWatching>
       <ConfirmDialog
-        title="Update Preset"
-        description="Are you sure you want to update this preset to the current location?"
+        title={t("update_preset")}
+        description={`Are you sure you want to update ${preset?.name} to the current location?`}
         action="Confirm"
         show={showPresetSaveConfirmation}
         onClose={() => setShowPresetSaveConfirmation(false)}
@@ -176,11 +167,9 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
         <CameraFeed
           key={key}
           asset={asset}
-          preset={preset?.position}
+          preset={selectedPreset?.position}
           onMove={() => {
-            if (!preset) {
-              return;
-            }
+            setSelectedPreset(undefined);
             setHasMoved(true);
             setTimeout(async () => {
               const { data } = await operate({ type: "get_status" });
@@ -189,7 +178,6 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
                   feedStateSessionKey,
                   JSON.stringify({
                     type: "position",
-                    assetBed: preset.asset_bed.id,
                     value: (data as GetStatusResponse).result.position,
                   } satisfies LastAccessedPosition),
                 );
@@ -218,16 +206,17 @@ export const ConsultationFeedTab = (props: ConsultationTabProps) => {
                 <CameraPresetSelect
                   options={presets}
                   label={(obj) => obj.name}
-                  value={preset}
+                  value={selectedPreset}
                   onChange={(value) => {
                     triggerGoal("Camera Preset Clicked", {
-                      presetName: preset?.name,
+                      presetName: selectedPreset?.name,
                       consultationId: props.consultationId,
                       userId: authUser.id,
                       result: "success",
                     });
                     setHasMoved(false);
                     setPreset(value);
+                    setSelectedPreset(value);
                   }}
                 />
                 {isUpdatingPreset ? (
@@ -273,7 +262,6 @@ type LastAccessedPreset = {
 
 type LastAccessedPosition = {
   type: "position";
-  assetBed: string;
   value: PTZPayload;
 };
 
